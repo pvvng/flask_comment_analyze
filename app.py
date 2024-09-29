@@ -15,6 +15,8 @@ from transformers import AutoTokenizer, AutoModelForSequenceClassification
 import torch.nn.functional as F
 # 시간 재기
 import time
+# log 사용
+import math
 
 # flask
 app = Flask(__name__)
@@ -59,13 +61,16 @@ def receive_data():
     for comment in parsed_data :
         text = comment['text']
         like = comment['like']
-        like_to_add = round(like / 10)
+        # like 0 이하면 1로 변경
+        if like <= 0:
+            like = 1
+        like_to_add = round(math.log2(like))
         # 좋아요 100 이하는 1로 변경 
-        if like_to_add == 0: 
+        if like_to_add <= 0: 
             like_to_add = 1
 
         # 띄어쓰기 교정
-        corrected_sentence = spacing(text)
+        # corrected_sentence = spacing(text)
 
         # 키워드 분석 결과 삽입
         keyword_result = []
@@ -80,11 +85,14 @@ def receive_data():
                 keyword_dict[keyword] = like_to_add
         
         # 감정 분석
-        sentiment_result = get_sentiment(corrected_sentence, tokenizer, model, F)
+        sentiment_result = get_sentiment(text, tokenizer, model, F)
         sentiment_dict[sentiment_result] += like_to_add
+        # sentiment_dict[sentiment_result] += 1
 
-        print(corrected_sentence)
+        # print(corrected_sentence)
+        print(text)
         print(sentiment_result)
+        print(like_to_add)
         print('--------------------------------------')
     # 종료시간  
     end_time = time.time()
