@@ -30,8 +30,8 @@ spacing = Spacing()
 okt = Okt()
 
 # 로컬 경로에서 KcBERT 모델과 토크나이저 로드
-tokenizer = AutoTokenizer.from_pretrained("./models")
-model = AutoModelForSequenceClassification.from_pretrained("./models")
+tokenizer = AutoTokenizer.from_pretrained("./models-steam")
+model = AutoModelForSequenceClassification.from_pretrained("./models-steam")
 
 @app.route('/')
 def say_hello():

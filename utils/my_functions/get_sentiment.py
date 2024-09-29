@@ -21,6 +21,7 @@ def get_sentiment(data, tokenizer, model, F):
     negative_prob = probs[0][0].item() * 100  # 부정일 확률
     positive_prob = probs[0][1].item() * 100  # 긍정일 확률
 
+    print(positive_prob, negative_prob)
     # 긍정 부정 차이 계산
     diff = abs(positive_prob - negative_prob)
     if (diff <= 10):

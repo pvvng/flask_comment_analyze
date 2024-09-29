@@ -9,7 +9,12 @@
 .venv/
 venv/
 
-# models
+# models-20240927
 .models/*
 .models/
 models/
+
+# models-20240928
+.models-steam/*
+.models-steam/
+models-steam/
