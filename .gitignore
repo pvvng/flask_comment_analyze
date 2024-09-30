@@ -10,11 +10,16 @@
 venv/
 
 # models-20240927
-.models/*
-.models/
-models/
+.models-nsmc/*
+.models-nsmc/
+models-nsmc/
 
 # models-20240928
 .models-steam/*
 .models-steam/
 models-steam/
+
+# models-20240930
+.models-ns/*
+.models-ns/
+models-ns/

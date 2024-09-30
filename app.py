@@ -32,8 +32,10 @@ spacing = Spacing()
 okt = Okt()
 
 # 로컬 경로에서 KcBERT 모델과 토크나이저 로드
-tokenizer = AutoTokenizer.from_pretrained("./models-steam")
-model = AutoModelForSequenceClassification.from_pretrained("./models-steam")
+s_tokenizer = AutoTokenizer.from_pretrained("./models-steam")
+s_model = AutoModelForSequenceClassification.from_pretrained("./models-steam")
+ns_tokenizer = AutoTokenizer.from_pretrained("./models-ns")
+ns_model = AutoModelForSequenceClassification.from_pretrained("./models-ns")
 
 @app.route('/')
 def say_hello():
@@ -85,13 +87,29 @@ def receive_data():
                 keyword_dict[keyword] = like_to_add
         
         # 감정 분석
-        sentiment_result = get_sentiment(text, tokenizer, model, F)
+        s_sentiment_result = get_sentiment(text, s_tokenizer, s_model, F, 'steam')
+        ns_sentiment_result = get_sentiment(text, ns_tokenizer, ns_model, F, 'naver-shopping')
+        # 가중합을 통한 최종 예측
+        # 가중치 조정
+        final_positive = (0.9 * s_sentiment_result[0] + 0.1 * ns_sentiment_result[0])  
+        final_negative = (0.4 * s_sentiment_result[1] + 0.6 * ns_sentiment_result[1])
+        sentiment_result = "neutral"
+        # 합산 검사
+        diff = abs(final_positive - final_negative)
+
+        if (diff <= 10):
+            sentiment_result = "neutral"
+        elif final_positive > final_negative :
+            sentiment_result = "positive"
+        else :
+            sentiment_result = "negative"
+            
         sentiment_dict[sentiment_result] += like_to_add
-        # sentiment_dict[sentiment_result] += 1
 
         # print(corrected_sentence)
         print(text)
         print(sentiment_result)
+        print(final_positive, final_negative)
         print(like_to_add)
         print('--------------------------------------')
     # 종료시간  
