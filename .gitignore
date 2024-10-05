@@ -23,3 +23,8 @@ models-steam/
 .models-ns/*
 .models-ns/
 models-ns/
+
+# models-20241005
+.models-v4/*
+.models-v4/
+models-v4/
